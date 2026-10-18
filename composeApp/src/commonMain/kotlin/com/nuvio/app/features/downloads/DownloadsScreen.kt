@@ -1,5 +1,6 @@
 package com.nuvio.app.features.downloads
 
+import com.nuvio.app.core.ui.PlatformBackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +48,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DownloadsScreen(
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     onOpenDownload: (DownloadItem) -> Unit,
     initialShowId: String? = null,
     onNavigateToShow: ((showId: String, title: String) -> Unit)? = null,
@@ -77,6 +78,11 @@ fun DownloadsScreen(
         }
     }
 
+    // As a root tab there is no screen to pop, so back only leaves the show's episode list.
+    PlatformBackHandler(enabled = onBack == null && onBackFromShow == null && selectedShowId != null) {
+        selectedShowId = null
+    }
+
     NuvioScreen {
         stickyHeader {
             NuvioScreenHeader(
@@ -85,12 +91,16 @@ fun DownloadsScreen(
                 } else {
                     selectedShowTitle ?: stringResource(Res.string.downloads_show_downloads)
                 },
-                onBack = {
-                    if (selectedShowId != null) {
-                        onBackFromShow?.invoke() ?: run { selectedShowId = null }
-                    } else {
-                        onBack()
+                onBack = if (selectedShowId != null || onBack != null) {
+                    {
+                        if (selectedShowId != null) {
+                            onBackFromShow?.invoke() ?: run { selectedShowId = null }
+                        } else {
+                            onBack?.invoke()
+                        }
                     }
+                } else {
+                    null
                 },
                 actions = {
                     IconButton(

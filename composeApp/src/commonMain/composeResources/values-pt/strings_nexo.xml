@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stream_tag_dubbed">Dublado</string>
+    <string name="stream_tag_dual_audio">Dual áudio</string>
+    <string name="stream_tag_multi">Multi</string>
+    <string name="compose_nav_anime">Animes</string>
+    <string name="compose_nav_downloads">Downloads</string>
+    <string name="anime_title">Animes</string>
+    <string name="anime_row_season">Temporada atual</string>
+    <string name="anime_row_popular">Mais populares</string>
+    <string name="anime_row_top_rated">Mais bem avaliados</string>
+    <string name="anime_row_movies">Filmes</string>
+    <string name="anime_row_upcoming">Próximos lançamentos</string>
+    <string name="anime_source_kitsu">Kitsu</string>
+    <string name="anime_kitsu_addon_title">Instale o Anime Kitsu</string>
+    <string name="anime_kitsu_addon_body">Os animes usam IDs do Kitsu. O addon Anime Kitsu traz os episódios e os detalhes; addons de fontes como o Torrentio já buscam por esses IDs.</string>
+    <string name="anime_kitsu_addon_installing">Instalando…</string>
+    <string name="anime_kitsu_addon_installed">Anime Kitsu instalado</string>
+    <string name="anime_load_failed">Não foi possível carregar os animes do Kitsu.</string>
+    <string name="anime_row_airing">Em exibição</string>
+    <string name="anime_source_mal">MyAnimeList</string>
+    <string name="anime_mal_settings_title">MyAnimeList</string>
+    <string name="anime_mal_settings_body">Cole um Client ID do MyAnimeList para usar os rankings e as notas do MAL nesta aba. Crie um de graça em myanimelist.net/apiconfig (App Type: other). Deixe em branco para usar o Kitsu.</string>
+    <string name="anime_mal_open_api_config">Obter um Client ID</string>
+    <string name="anime_mal_client_id_placeholder">Client ID</string>
+    <string name="anime_mal_saved">MyAnimeList conectado</string>
+    <string name="anime_mal_cleared">Voltando a usar o Kitsu</string>
+    <string name="anime_mal_invalid">O MyAnimeList recusou este Client ID.</string>
+    <string name="anime_mal_network_error">Não foi possível falar com o MyAnimeList. Tente de novo.</string>
+    <string name="anime_settings">Fonte dos animes</string>
+</resources>

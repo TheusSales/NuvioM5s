@@ -2,6 +2,7 @@ package com.nuvio.app
 
 import android.content.Intent
 import android.content.res.Configuration
+import com.nuvio.app.features.anime.AnimeSettingsStorage
 import com.nuvio.app.features.autosync.AutoSyncPreferencesAndroid
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -119,6 +120,7 @@ open class MainActivity : AppCompatActivity() {
         CardDepthStyleStorage.initialize(applicationContext)
         DebridSettingsStorage.initialize(applicationContext)
         TmdbSettingsStorage.initialize(applicationContext)
+        AnimeSettingsStorage.initialize(applicationContext)
         MdbListSettingsStorage.initialize(applicationContext)
         TraktAuthStorage.initialize(applicationContext)
         TraktCommentsStorage.initialize(applicationContext)

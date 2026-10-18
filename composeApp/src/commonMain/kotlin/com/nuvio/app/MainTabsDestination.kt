@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -38,6 +40,8 @@ import com.nuvio.app.features.settings.ThemeSettingsRepository
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import nuvio.composeapp.generated.resources.Res
+import nuvio.composeapp.generated.resources.compose_nav_anime
+import nuvio.composeapp.generated.resources.compose_nav_downloads
 import nuvio.composeapp.generated.resources.compose_nav_home
 import nuvio.composeapp.generated.resources.compose_nav_library
 import nuvio.composeapp.generated.resources.compose_nav_profile
@@ -93,10 +97,22 @@ internal fun MainTabsDestination(
                 label = stringResource(Res.string.compose_nav_search),
             ),
             FloatingNavigationItem(
+                selected = selectedTab == AppScreenTab.Anime,
+                onClick = { onTabSelected(AppScreenTab.Anime) },
+                icon = Icons.Filled.AutoAwesome,
+                label = stringResource(Res.string.compose_nav_anime),
+            ),
+            FloatingNavigationItem(
                 selected = selectedTab == AppScreenTab.Library,
                 onClick = { onTabSelected(AppScreenTab.Library) },
                 drawable = Res.drawable.sidebar_library,
                 label = stringResource(Res.string.compose_nav_library),
+            ),
+            FloatingNavigationItem(
+                selected = selectedTab == AppScreenTab.Downloads,
+                onClick = { onTabSelected(AppScreenTab.Downloads) },
+                icon = Icons.Filled.Download,
+                label = stringResource(Res.string.compose_nav_downloads),
             ),
             FloatingNavigationItem(
                 selected = selectedTab == AppScreenTab.Settings,
@@ -137,10 +153,22 @@ internal fun MainTabsDestination(
                             contentDescription = stringResource(Res.string.compose_nav_search),
                         )
                         NavItem(
+                            selected = selectedTab == AppScreenTab.Anime,
+                            onClick = { onTabSelected(AppScreenTab.Anime) },
+                            icon = Icons.Filled.AutoAwesome,
+                            contentDescription = stringResource(Res.string.compose_nav_anime),
+                        )
+                        NavItem(
                             selected = selectedTab == AppScreenTab.Library,
                             onClick = { onTabSelected(AppScreenTab.Library) },
                             icon = Res.drawable.sidebar_library,
                             contentDescription = stringResource(Res.string.compose_nav_library),
+                        )
+                        NavItem(
+                            selected = selectedTab == AppScreenTab.Downloads,
+                            onClick = { onTabSelected(AppScreenTab.Downloads) },
+                            icon = Icons.Filled.Download,
+                            contentDescription = stringResource(Res.string.compose_nav_downloads),
                         )
                         NavItem(
                             selected = selectedTab == AppScreenTab.Settings,

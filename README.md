@@ -1,22 +1,13 @@
-<div align="center">
+# Nexo Mobile
 
-  <img src="https://nuvio.tv/assets/nuvio-app-logo-wordmark.webp" alt="Nuvio" width="320" />
+App nativo do Nexo para Android e iOS, um fork do [Nuvio Mobile](https://github.com/NuvioMedia/NuvioMobile) (GPLv3). Compatível com addons do Stremio, com debrid (TorBox, Real-Debrid, Premiumize) e P2P.
 
-  <p>
-    A free, open-source media app for your phone, your desktop, and the TV you already own.
-    <br />
-    Bring your own sources. Nuvio turns them into a library with artwork, ratings, subtitles, and your place saved on every screen.
-  </p>
+O que o fork acrescenta:
 
-  [Website](https://nuvio.tv) · [GitHub releases](https://github.com/NuvioMedia/NuvioMobile/releases/latest) · [Support Nuvio](https://nuvio.tv/support)
-
-</div>
-
-## Get Nuvio Mobile
-
-- [Android on Google Play](https://play.google.com/store/apps/details?id=com.nuvio.app)
-- [Android APK](https://github.com/NuvioMedia/NuvioMobile/releases/latest)
-- iOS via AltStore or SideStore: add [this source URL](https://raw.githubusercontent.com/NuvioMedia/NuvioMobile/cmp-rewrite/store.json) in the app's Sources section, then install Nuvio.
+- **Aba Animes**: temporada atual, em exibição, populares, mais bem avaliados, filmes e próximos lançamentos. Usa os rankings e as notas do **MyAnimeList** quando há um Client ID (engrenagem na aba; crie um em https://myanimelist.net/apiconfig) e o **Kitsu** quando não há. Os títulos abrem pelo addon **Anime Kitsu**, que a aba oferece para instalar.
+- **Aba Downloads**: a tela de downloads virou uma aba. Torrents são baixados pelo debrid ativo (por exemplo, TorBox), que entrega um link direto.
+- **Tags automáticas nas fontes**: em cache no debrid, resolução, Dublado/Dual áudio/Multi, HDR/DV, origem (REMUX, WEB-DL, CAM…), codec, áudio, tamanho e seeders.
+- Marca e ícone do Nexo, `applicationId` `app.nexo.mobile` (instala ao lado do Nuvio) e atualizador apontando para as releases deste repositório.
 
 ## Build from source
 

@@ -22,9 +22,12 @@ import com.nuvio.app.core.ui.DisintegrationRequest
 import com.nuvio.app.core.ui.NuvioLoadingIndicator
 import com.nuvio.app.core.ui.NuvioTokens
 import com.nuvio.app.core.ui.nuvio
+import com.nuvio.app.features.anime.AnimeScreen
 import com.nuvio.app.features.cloud.CloudLibraryContentType
 import com.nuvio.app.features.cloud.CloudLibraryFile
 import com.nuvio.app.features.cloud.CloudLibraryItem
+import com.nuvio.app.features.downloads.DownloadItem
+import com.nuvio.app.features.downloads.DownloadsScreen
 import com.nuvio.app.features.home.HomeCatalogSection
 import com.nuvio.app.features.home.HomeScreen
 import com.nuvio.app.features.home.MetaPreview
@@ -79,6 +82,7 @@ internal data class AppTabState(
 internal data class AppTabRequests(
     val homeScrollToTopRequests: Flow<Unit>,
     val searchScrollToTopRequests: Flow<Unit>,
+    val animeScrollToTopRequests: Flow<Unit>,
     val libraryScrollToTopRequests: Flow<Unit>,
     val settingsRootActionRequests: Flow<Unit>,
 )
@@ -93,6 +97,7 @@ internal data class AppTabActions(
     val onCloudFilePlay: ((CloudLibraryItem, CloudLibraryFile) -> Unit)? = null,
     val onConnectCloudClick: (() -> Unit)? = null,
     val onDownloadsClick: () -> Unit = {},
+    val onOpenDownload: (DownloadItem) -> Unit = {},
     val onContinueWatchingClick: ((ContinueWatchingItem) -> Unit)? = null,
     val onContinueWatchingLongPress: ((ContinueWatchingItem) -> Unit)? = null,
     val onSwitchProfile: (() -> Unit)? = null,
@@ -155,6 +160,22 @@ internal fun AppTabHost(
                     onPosterLongClick = actions.onPosterLongClick,
                     searchFocusRequestCount = state.searchFocusRequestCount,
                     scrollToTopRequests = requests.searchScrollToTopRequests,
+                )
+            }
+
+            AppScreenTab.Anime -> {
+                AnimeScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    scrollToTopRequests = requests.animeScrollToTopRequests,
+                    onPosterClick = actions.onPosterClick,
+                    onPosterLongClick = actions.onPosterLongClick,
+                )
+            }
+
+            AppScreenTab.Downloads -> {
+                DownloadsScreen(
+                    onBack = null,
+                    onOpenDownload = actions.onOpenDownload,
                 )
             }
 

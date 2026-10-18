@@ -254,6 +254,7 @@ internal fun MainAppContent(
         val searchScrollToTopRequests = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
         val searchListState = rememberLazyListState()
         val libraryScrollToTopRequests = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
+        val animeScrollToTopRequests = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
         val settingsRootActionRequests = remember { MutableSharedFlow<Unit>(extraBufferCapacity = 1) }
         val currentRoute = navBackStack.lastOrNull() as? AppRoute
         LaunchedEffect(currentRoute, posterNavigationEnabled) {
@@ -418,7 +419,9 @@ internal fun MainAppContent(
                 searchFocusRequestCount++
                 searchScrollToTopRequests.tryEmit(Unit)
             }
+            AppScreenTab.Anime -> animeScrollToTopRequests.tryEmit(Unit)
             AppScreenTab.Library -> libraryScrollToTopRequests.tryEmit(Unit)
+            AppScreenTab.Downloads -> Unit
             AppScreenTab.Settings -> settingsRootActionRequests.tryEmit(Unit)
         }
     }
@@ -637,10 +640,7 @@ internal fun MainAppContent(
                     DownloadsRepository.playableLocalFileUri(it) != null
                 }
                 if (hasPlayableDownload) {
-                    activateTab(AppScreenTab.Library)
-                    navController.navigate(DownloadsRoute(downloadsTitle)) {
-                        launchSingleTop = true
-                    }
+                    activateTab(AppScreenTab.Downloads)
                 }
             }
         }
@@ -757,10 +757,7 @@ internal fun MainAppContent(
                     }
 
                     AppDeepLink.Downloads -> {
-                        activateTab(AppScreenTab.Library)
-                        navController.navigate(DownloadsRoute(downloadsTitle)) {
-                            launchSingleTop = true
-                        }
+                        activateTab(AppScreenTab.Downloads)
                         AppDeepLinkRepository.markConsumed(deepLink)
                     }
 
@@ -1326,12 +1323,14 @@ internal fun MainAppContent(
                         requests = remember(
                             homeScrollToTopRequests,
                             searchScrollToTopRequests,
+                            animeScrollToTopRequests,
                             libraryScrollToTopRequests,
                             settingsRootActionRequests,
                         ) {
                             AppTabRequests(
                                 homeScrollToTopRequests = homeScrollToTopRequests,
                                 searchScrollToTopRequests = searchScrollToTopRequests,
+                                animeScrollToTopRequests = animeScrollToTopRequests,
                                 libraryScrollToTopRequests = libraryScrollToTopRequests,
                                 settingsRootActionRequests = settingsRootActionRequests,
                             )
@@ -1415,7 +1414,8 @@ internal fun MainAppContent(
                                         activateTab(AppScreenTab.Settings)
                                     }
                                 },
-                                onDownloadsClick = { navController.navigate(DownloadsRoute(downloadsTitle)) },
+                                onDownloadsClick = { activateTab(AppScreenTab.Downloads) },
+                                onOpenDownload = ::openDownloadedItem,
                                 onContinueWatchingClick = onContinueWatchingClick,
                                 onContinueWatchingLongPress = onContinueWatchingLongPress,
                                 onSwitchProfile = onSwitchProfile,

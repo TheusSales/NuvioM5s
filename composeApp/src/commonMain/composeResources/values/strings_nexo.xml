@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stream_tag_dubbed">Dubbed PT</string>
+    <string name="stream_tag_dual_audio">Dual audio</string>
+    <string name="stream_tag_multi">Multi</string>
+    <string name="compose_nav_anime">Anime</string>
+    <string name="compose_nav_downloads">Downloads</string>
+    <string name="anime_title">Anime</string>
+    <string name="anime_row_season">This season</string>
+    <string name="anime_row_popular">Most popular</string>
+    <string name="anime_row_top_rated">Top rated</string>
+    <string name="anime_row_movies">Movies</string>
+    <string name="anime_row_upcoming">Upcoming</string>
+    <string name="anime_source_kitsu">Kitsu</string>
+    <string name="anime_kitsu_addon_title">Install Anime Kitsu</string>
+    <string name="anime_kitsu_addon_body">Anime use Kitsu IDs. The Anime Kitsu addon provides episodes and details for them; stream addons like Torrentio already search these IDs.</string>
+    <string name="anime_kitsu_addon_installing">Installing…</string>
+    <string name="anime_kitsu_addon_installed">Anime Kitsu installed</string>
+    <string name="anime_load_failed">Could not load anime from Kitsu.</string>
+    <string name="anime_row_airing">Airing now</string>
+    <string name="anime_source_mal">MyAnimeList</string>
+    <string name="anime_mal_settings_title">MyAnimeList</string>
+    <string name="anime_mal_settings_body">Paste a MyAnimeList Client ID to use MAL rankings and scores on this tab. Create one for free at myanimelist.net/apiconfig (App Type: other). Leave blank to use Kitsu.</string>
+    <string name="anime_mal_open_api_config">Get a Client ID</string>
+    <string name="anime_mal_client_id_placeholder">Client ID</string>
+    <string name="anime_mal_saved">MyAnimeList connected</string>
+    <string name="anime_mal_cleared">Using Kitsu again</string>
+    <string name="anime_mal_invalid">MyAnimeList rejected this Client ID.</string>
+    <string name="anime_mal_network_error">Could not reach MyAnimeList. Try again.</string>
+    <string name="anime_settings">Anime source</string>
+</resources>

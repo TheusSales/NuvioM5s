@@ -14,6 +14,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -43,6 +44,11 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.nuvio.app.core.ui.SkeletonBlock
 import com.nuvio.app.features.debrid.DebridProviders
+import nuvio.composeapp.generated.resources.Res
+import nuvio.composeapp.generated.resources.stream_tag_dubbed
+import nuvio.composeapp.generated.resources.stream_tag_dual_audio
+import nuvio.composeapp.generated.resources.stream_tag_multi
+import org.jetbrains.compose.resources.stringResource
 
 internal val LocalStreamHighlight = staticCompositionLocalOf<(StreamItem) -> String?> { { null } }
 
@@ -141,6 +147,17 @@ internal fun StreamCard(
                     ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+            }
+
+            val autoTags = remember(stream, showFileSizeBadges) {
+                StreamTags.tagsFor(
+                    stream = stream,
+                    includeSize = !(showFileSizeBadges && stream.behaviorHints.videoSize != null),
+                )
+            }
+            if (autoTags.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(6.dp))
+                StreamTagRow(tags = autoTags)
             }
 
             if (hasBadges && badgePlacement == StreamBadgePlacement.BOTTOM) {
@@ -273,6 +290,58 @@ private fun StreamNameWithInstantService(
         }
         trailingContent()
     }
+}
+
+@Composable
+private fun StreamTagRow(tags: List<StreamTag>) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        tags.forEach { tag -> StreamTagChip(tag) }
+    }
+}
+
+@Composable
+private fun StreamTagChip(tag: StreamTag) {
+    val color = tag.kind.color()
+    val label = when (tag.language) {
+        StreamTagLanguage.DUBBED -> stringResource(Res.string.stream_tag_dubbed)
+        StreamTagLanguage.DUAL_AUDIO -> stringResource(Res.string.stream_tag_dual_audio)
+        StreamTagLanguage.MULTI -> stringResource(Res.string.stream_tag_multi)
+        null -> tag.label
+    }
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(color.copy(alpha = 0.16f))
+            .border(1.dp, color.copy(alpha = 0.45f), RoundedCornerShape(6.dp))
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+    ) {
+        Text(
+            text = label,
+            color = color,
+            fontSize = 11.sp,
+            lineHeight = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+        )
+    }
+}
+
+private fun StreamTagKind.color(): Color = when (this) {
+    StreamTagKind.CACHED -> Color(0xFF4ADE80)
+    StreamTagKind.RESOLUTION -> Color(0xFFF5F5F7)
+    StreamTagKind.LANGUAGE -> Color(0xFFFFB347)
+    StreamTagKind.HDR -> Color(0xFFC084FC)
+    StreamTagKind.SOURCE -> Color(0xFF7DD3FC)
+    StreamTagKind.LOW_QUALITY -> Color(0xFFFF5C7A)
+    StreamTagKind.CODEC -> Color(0xFF94A3B8)
+    StreamTagKind.AUDIO -> Color(0xFF5EEAD4)
+    StreamTagKind.SIZE -> Color(0xFFD4D4D8)
+    StreamTagKind.SEEDERS_HIGH -> Color(0xFF4ADE80)
+    StreamTagKind.SEEDERS_MEDIUM -> Color(0xFFFACC15)
+    StreamTagKind.SEEDERS_LOW -> Color(0xFFFF5C7A)
 }
 
 @Composable
