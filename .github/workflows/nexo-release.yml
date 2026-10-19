@@ -1,0 +1,108 @@
+name: Nexo Android Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Versão sem o "v" (ex. 0.6.2-nexo.2). Cria a tag v<versão> no commit escolhido.
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nexo-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  android:
+    name: Build and publish APKs
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LOCAL_PROPERTIES_BASE64: ${{ secrets.NEXO_LOCAL_PROPERTIES_BASE64 }}
+      RELEASE_KEYSTORE_BASE64: ${{ secrets.NEXO_RELEASE_KEYSTORE_BASE64 }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Resolve version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            version="${INPUT_VERSION}"
+          else
+            version="${GITHUB_REF_NAME}"
+          fi
+          version="${version#v}"
+          if ! printf '%s' "${version}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "Versão inválida: ${version}" >&2
+            exit 1
+          fi
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "tag=v${version}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check out source
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Configure signing and backend
+        run: |
+          if [ -z "${LOCAL_PROPERTIES_BASE64}" ] || [ -z "${RELEASE_KEYSTORE_BASE64}" ]; then
+            echo "Faltam os secrets NEXO_LOCAL_PROPERTIES_BASE64 e/ou NEXO_RELEASE_KEYSTORE_BASE64" >&2
+            exit 1
+          fi
+          keystore_path="${RUNNER_TEMP}/nexo-release.p12"
+          printf '%s' "${RELEASE_KEYSTORE_BASE64}" | base64 --decode > "${keystore_path}"
+          printf '%s' "${LOCAL_PROPERTIES_BASE64}" | base64 --decode > local.properties
+          sed -i -E '/^[[:space:]]*(sdk\.dir|NUVIO_RELEASE_STORE_FILE)[[:space:]]*=/d' local.properties
+          printf '\nNUVIO_RELEASE_STORE_FILE=%s\n' "${keystore_path}" >> local.properties
+          for property_name in NUVIO_RELEASE_STORE_PASSWORD NUVIO_RELEASE_KEY_ALIAS NUVIO_RELEASE_KEY_PASSWORD NUVIO_SUPABASE_URL NUVIO_SUPABASE_ANON_KEY; do
+            if ! grep -Eq "^${property_name}=.+" local.properties; then
+              echo "Propriedade obrigatória ausente: ${property_name}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Build release APKs
+        run: |
+          ./gradlew :androidApp:assembleFullRelease \
+            -Pnuvio.app.versionName="${{ steps.version.outputs.version }}" \
+            -Pnuvio.android.distribution=full \
+            -Pnuvio.ios.distribution=appstore \
+            --stacktrace
+
+      - name: Collect APKs
+        run: |
+          mkdir -p dist
+          for apk in androidApp/build/outputs/apk/full/release/androidApp-full-*-release.apk; do
+            abi="$(basename "${apk}" | sed -E 's/^androidApp-full-(.+)-release\.apk$/\1/')"
+            cp "${apk}" "dist/nexo-mobile-${{ steps.version.outputs.version }}-${abi}.apk"
+          done
+          ls -la dist
+
+      - name: Publish GitHub release
+        run: |
+          tag="${{ steps.version.outputs.tag }}"
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            gh release upload "${tag}" dist/*.apk --clobber
+          else
+            gh release create "${tag}" dist/*.apk \
+              --target "${GITHUB_SHA}" \
+              --title "Nexo Mobile ${{ steps.version.outputs.version }}" \
+              --generate-notes \
+              --latest
+          fi
