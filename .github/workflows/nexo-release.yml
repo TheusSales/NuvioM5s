@@ -90,7 +90,7 @@ jobs:
           mkdir -p dist
           for apk in androidApp/build/outputs/apk/full/release/androidApp-full-*-release.apk; do
             abi="$(basename "${apk}" | sed -E 's/^androidApp-full-(.+)-release\.apk$/\1/')"
-            cp "${apk}" "dist/nexo-mobile-${{ steps.version.outputs.version }}-${abi}.apk"
+            cp "${apk}" "dist/NuvioM5s-${{ steps.version.outputs.version }}-${abi}.apk"
           done
           ls -la dist
 

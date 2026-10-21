@@ -40,7 +40,7 @@ internal object AppUpdaterRepository {
     suspend fun getLatestChannelUpdate(channel: UpdateChannel): Result<AppUpdate> = runCatching {
         val response = httpRequestRaw(
             method = "GET",
-            url = "https://api.github.com/repos/TheusSales/nexo-mobile/${releasePath(channel)}",
+            url = "https://api.github.com/repos/TheusSales/NuvioM5s/${releasePath(channel)}",
             headers = mapOf(
                 "Accept" to "application/vnd.github+json",
                 "User-Agent" to "NexoMobile",
